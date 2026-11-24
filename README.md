@@ -1,8 +1,9 @@
-
 LastWave
 
-Download
+📦 Download
 
-Download the complete ZIP file from Google Drive:
+Download the complete LastWave ZIP file:
 
-"Download LastWave" (https://drive.google.com/file/d/1sTlpotvTi-BcGwnjvUEd7srnL4pS7BXh/view?usp=drivesdk)
+"⬇️ Download LastWave (ZIP)" (https://drive.google.com/uc?export=download&id=1sTlpotvTi-BcGwnjvUEd7srnL4pS7BXh)
+
+File hosting: Google Drive
