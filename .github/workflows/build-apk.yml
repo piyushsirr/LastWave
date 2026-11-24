@@ -20,11 +20,14 @@ jobs:
           sudo apt-get install -y unzip
           python -m pip install gdown
 
+      
       - name: Download ZIP from Google Drive
         run: |
-          gdown --fuzzy "https://drive.google.com/file/d/1sTlpotvTi-BcGwnjvUEd7srnL4pS7BXh/view" -O LastWave.zip
+          python -m pip install --upgrade gdown
+          gdown "https://drive.google.com/uc?id=1sTlpotvTi-BcGwnjvUEd7srnL4pS7BXh" -O LastWave.zip
           mkdir extracted
           unzip -q LastWave.zip -d extracted
+
 
       - name: Find or build APK
         run: |
