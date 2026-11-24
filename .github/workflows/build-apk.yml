@@ -1,0 +1,63 @@
+
+name: Build LastWave APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          python -m pip install gdown
+
+      - name: Download ZIP from Google Drive
+        run: |
+          gdown --fuzzy "https://drive.google.com/file/d/1sTlpotvTi-BcGwnjvUEd7srnL4pS7BXh/view" -O LastWave.zip
+          mkdir extracted
+          unzip -q LastWave.zip -d extracted
+
+      - name: Find or build APK
+        run: |
+          mkdir -p output
+
+          APK=$(find extracted -type f -iname "*.apk" | head -n 1)
+
+          if [ -n "$APK" ]; then
+            echo "Existing APK found"
+            cp "$APK" output/
+          else
+            WRAPPER=$(find extracted -type f -name gradlew | head -n 1)
+
+            if [ -z "$WRAPPER" ]; then
+              echo "No APK or Gradle wrapper found!"
+              exit 1
+            fi
+
+            PROJECT=$(dirname "$WRAPPER")
+            cd "$PROJECT"
+            chmod +x gradlew
+            ./gradlew assembleDebug
+
+            find . -path "*/build/outputs/apk/*/*.apk" \
+              -type f -exec cp {} "$GITHUB_WORKSPACE/output/" \;
+          fi
+
+          ls -lh "$GITHUB_WORKSPACE/output"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LastWave-APK
+          path: output/*.apk
+          if-no-files-found: error
+          retention-days: 30
